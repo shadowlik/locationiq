@@ -25,7 +25,6 @@ export interface LocationIqOptions {
     format?: string;
 }
 
-
 export interface LocationIqSearch {
     query: string;
     street: string;
@@ -34,6 +33,11 @@ export interface LocationIqSearch {
     state: string;
     country: string;
     postalcode: string;
+}
+
+export interface LocationIqReverse {
+    lat: number;
+    lng: number;
 }
 
 export class LocationIq {
@@ -81,6 +85,15 @@ export class LocationIq {
         }
     }
 
+    /**
+     * Search / Forward Geocoding
+     *
+     * The Search API allows converting addresses, such as a street address,
+     * into geographic coordinates (latitude and longitude).
+     *
+     * @param {LocationIqSearch} options
+     * @memberof LocationIq
+     */
     search(options: LocationIqSearch): void {
         const {
             query,
@@ -92,10 +105,41 @@ export class LocationIq {
             postalcode,
         } = options;
 
+        // viewbox
+        // bounded
+        // addressdetails
+        // limit
+        // accept-language
+        // countrycodes
+        // namedetails
+        // dedupe
+        // polygon_geojson
+        // polygon_kml
+        // polygon_svg
+        // polygon_text
+        // extratags
+        // exclude_place_ids
+
+        let params;
         if (query) {
 
         }
 
-        this.request.get('search.php');
+        this.request.get('search.php', {
+            params,
+        });
+    }
+
+    /**
+     * Reverse Geocoding
+     *
+     * Reverse geocoding is the process of converting a coordinate or location
+     * (latitude, longitude) to a readable address or place name.
+     *
+     * @param {LocationIqReverse} options
+     * @memberof LocationIq
+     */
+    reverse(options: LocationIqReverse): void {
+        this.request.get('reverse.php');
     }
 }

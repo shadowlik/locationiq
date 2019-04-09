@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "LocationIQ API",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shadowlik/locationiq"
+  },
   "scripts": {
     "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
