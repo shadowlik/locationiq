@@ -1,4 +1,9 @@
-import Axios, { AxiosInstance } from 'axios';
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
+
+enum Bool {
+    true = 1,
+    false = 2
+}
 
 export interface LocationIqOptions {
     /**
@@ -26,13 +31,27 @@ export interface LocationIqOptions {
 }
 
 export interface LocationIqSearch {
-    query: string;
-    street: string;
-    city: string;
-    county: string;
-    state: string;
-    country: string;
-    postalcode: string;
+    street?: string;
+    city?: string;
+    county?: string;
+    state?: string;
+    country?: string;
+    postalcode?: string;
+    viewbox?: string;
+    bounded?: string;
+    addressdetails?: Bool;
+    limit?: string;
+    acceptLanguage?: string;
+    countrycodes?: string;
+    namedetails?: string;
+    dedupe?: string;
+    polygonGeojson?: string;
+    polygonKml?: string;
+    polygonSvg?: string;
+    polygonText?: string;
+    extratags?: string;
+    excludePlaceIds?: string;
+    normalizecity?: string;
 }
 
 export interface LocationIqReverse {
@@ -86,6 +105,34 @@ export class LocationIq {
     }
 
     /**
+     * Success handler
+     *
+     * @private
+     * @param {AxiosResponse} response
+     * @returns {*}
+     * @memberof LocationIq
+     */
+    private success(response: AxiosResponse): any {
+        return {
+            status: 200,
+            results: response.data,
+            total: response.data.length,
+        };
+    };
+
+    /**
+     * Error handler
+     *
+     * @private
+     * @param {Error} error
+     * @returns {Error}
+     * @memberof LocationIq
+     */
+    private error(error: Error): Error {
+        return error;
+    };
+
+    /**
      * Search / Forward Geocoding
      *
      * The Search API allows converting addresses, such as a street address,
@@ -94,40 +141,73 @@ export class LocationIq {
      * @param {LocationIqSearch} options
      * @memberof LocationIq
      */
-    search(options: LocationIqSearch): void {
-        const {
-            query,
-            street,
-            city,
-            county,
-            state,
-            country,
-            postalcode,
-        } = options;
+    async search(searchParams: LocationIqSearch | string ): Promise<any> {
+        try {
+            let params: { [x: string]: any } = {};
 
-        // viewbox
-        // bounded
-        // addressdetails
-        // limit
-        // accept-language
-        // countrycodes
-        // namedetails
-        // dedupe
-        // polygon_geojson
-        // polygon_kml
-        // polygon_svg
-        // polygon_text
-        // extratags
-        // exclude_place_ids
+            if (typeof searchParams !== 'string') {
+                const {
+                    street,
+                    city,
+                    county,
+                    state,
+                    country,
+                    postalcode,
+                    viewbox,
+                    bounded,
+                    addressdetails,
+                    limit,
+                    acceptLanguage,
+                    countrycodes,
+                    namedetails,
+                    dedupe,
+                    polygonGeojson,
+                    polygonKml,
+                    polygonSvg,
+                    polygonText,
+                    extratags,
+                    excludePlaceIds,
+                    normalizecity,
+                } = searchParams as LocationIqSearch;
 
-        let params;
-        if (query) {
+                if (street) params.street = street;
+                if (city) params.city = city;
+                if (county) params.county = county;
+                if (state) params.state = state;
+                if (country) params.country = country;
+                if (postalcode) params.postalcode = postalcode;
+                if (viewbox) params.viewbox = viewbox;
+                if (bounded) params.bounded = bounded;
+                if (addressdetails) params.addressdetails = addressdetails;
+                if (limit) params.limit = limit;
+                if (acceptLanguage) params.acceptLanguage = acceptLanguage;
+                if (countrycodes) params.countrycodes = countrycodes;
+                if (namedetails) params.namedetails = namedetails;
+                if (dedupe) params.dedupe = dedupe;
+                if (polygonGeojson) params.polygonGeojson = polygonGeojson;
+                if (polygonKml) params.polygonKml = polygonKml;
+                if (polygonSvg) params.polygonSvg = polygonSvg;
+                if (polygonText) params.polygonText = polygonText;
+                if (extratags) params.extratags = extratags;
+                if (excludePlaceIds) params.excludePlaceIds = excludePlaceIds;
+                if (normalizecity) params.normalizecity = normalizecity;
 
+            } else {
+                // Query string only
+                if (searchParams.length === 0 || Array.isArray(searchParams)) throw Error('Please provide a valid search string');
+
+                params.q = searchParams;
+            };
+
+            const response = await this.request.get('search.php', {
+                params,
+            });
+
+            return this.success(response);
+
+        } catch (error) {
+            return this.error(error as Error);
         }
-
-        this.request.get('search.php', {
-            params,
-        });
     }
 
     /**
