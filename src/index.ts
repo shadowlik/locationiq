@@ -87,7 +87,7 @@ export class LocationIq {
         this.basePath = `https://${this.region}.locationiq.com/v1/`;
 
         if (!token && token.length === 0) {
-            throw Error('API Token is required');
+            throw new Error('API Token is required');
         }
 
 
@@ -194,7 +194,9 @@ export class LocationIq {
 
             } else {
                 // Query string only
-                if (searchParams.length === 0 || Array.isArray(searchParams)) throw Error('Please provide a valid search string');
+                if (searchParams.length === 0 || Array.isArray(searchParams)) {
+                    throw Error('Please provide a valid search string');
+                }
 
                 params.q = searchParams;
             };

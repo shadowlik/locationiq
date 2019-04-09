@@ -4,6 +4,7 @@
 
 Based on [LocationIQ documentation](https://locationiq.com/docs).
 
+/* https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40 */
 
 ## TL;DR;
 
@@ -21,3 +22,4 @@ location.search({
 })
 
 ```
+
