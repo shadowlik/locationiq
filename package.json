@@ -2,6 +2,7 @@
   "name": "locationiq",
   "version": "0.0.2",
   "description": "LocationIQ API",
+  "keywords": ["locationiq", "geocoding", "geolocation", "maps"],
   "main": "dist/index.js",
   "repository": {
     "type": "git",
