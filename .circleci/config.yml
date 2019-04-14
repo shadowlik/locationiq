@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   build:
     docker:
@@ -31,3 +33,6 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: test-results.xml
+      - codecov/upload:
+          flags: integration
+          file: test-results.xml
