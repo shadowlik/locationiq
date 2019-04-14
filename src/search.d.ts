@@ -5,12 +5,13 @@
  * @interface LocationIqSearchRequest
  */
 export interface LocationIqSearchRequest {
+    q?: string;
     street?: string;
     city?: string;
     county?: string;
     state?: string;
     country?: string;
-    postalCode?: string;
+    postalcode?: string;
     viewbox?: string;
     bounded?: string;
     addressdetails?: boolean;

@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { LocationIqSearchRequest, LocationIqSearchResponse } from './search';
-import { LocationIqReverseRequest } from './reverse';
+import { LocationIqReverseRequest, LocationIqReverseResponse } from './reverse';
 
 export interface LocationIqOptions {
     /**
@@ -83,7 +83,7 @@ export class LocationIq {
      */
     async search(searchParams: LocationIqSearchRequest | string ): Promise<LocationIqSearchResponse> {
         try {
-            let params: { [x: string]: any } = {};
+            const params: LocationIqSearchRequest= {};
 
             if (typeof searchParams === 'object' && !Array.isArray(searchParams)) {
                 const {
@@ -92,7 +92,7 @@ export class LocationIq {
                     county,
                     state,
                     country,
-                    postalCode,
+                    postalcode,
                     viewbox,
                     bounded,
                     addressdetails,
@@ -111,13 +111,13 @@ export class LocationIq {
                 } = searchParams as LocationIqSearchRequest;
 
                 // Postalcode with Country Codes search
-                if (postalCode && countrycodes) {
+                if (postalcode && countrycodes) {
                     if (typeof countrycodes !== 'string' || countrycodes.length  !== 2) {
                         throw new Error('Invalid country code');
                     };
 
                     params.countrycodes = countrycodes;
-                    params.postalcode = postalCode;
+                    params.postalcode = postalcode;
 
                 // Structure query
                 } else {
@@ -126,7 +126,7 @@ export class LocationIq {
                     if (county) params.county = county;
                     if (state) params.state = state;
                     if (country) params.country = country;
-                    if (postalCode) params.postalcode = postalCode;
+                    if (postalcode) params.postalcode = postalcode;
                     if (viewbox) params.viewbox = viewbox;
                     if (bounded) params.bounded = bounded;
                     if (addressdetails) params.addressdetails = addressdetails;
@@ -185,7 +185,59 @@ export class LocationIq {
      * @param {LocationIqReverse} options
      * @memberof LocationIq
      */
-    reverse(options: LocationIqReverseRequest): void {
-        this.request.get('reverse.php');
+    async reverse(options: LocationIqReverseRequest): Promise<LocationIqReverseResponse> {
+        const {
+            lat,
+            lon,
+            zoom,
+            addressdetails,
+            namedetails,
+            acceptLanguage,
+            osm_type,
+            osm_id,
+            countrycodes,
+            polygonGeojson,
+            polygonKml,
+            polygonSvg,
+            polygonText,
+            extratags,
+            normalizecity,
+            statecode,
+        } = options;
+
+        if (!lat) throw new Error('lat parameter is requried')
+        if (!lon) throw new Error('lat parameter is requried');
+
+        const params: LocationIqReverseRequest = {
+            lat,
+            lon,
+        };
+
+        if(zoom) params.zoom = zoom;
+        if(addressdetails) params.addressdetails = addressdetails;
+        if(namedetails) params.namedetails = namedetails;
+        if(acceptLanguage) params.acceptLanguage = acceptLanguage;
+        if(osm_type) params.osm_type = osm_type;
+        if(osm_id) params.osm_id = osm_id;
+        if(countrycodes) params.countrycodes = countrycodes;
+        if(polygonGeojson) params.polygonGeojson = polygonGeojson;
+        if(polygonKml) params.polygonKml = polygonKml;
+        if(polygonSvg) params.polygonSvg = polygonSvg;
+        if(polygonText) params.polygonText = polygonText;
+        if(extratags) params.extratags = extratags;
+        if(normalizecity) params.normalizecity = normalizecity;
+        if(statecode) params.statecode = statecode;
+
+        const queryResponse: AxiosResponse = await this.request.get('reverse.php', {
+            params,
+        });
+
+        const response: LocationIqReverseResponse = {
+            status: 200,
+            results: queryResponse.data,
+            total: queryResponse.data.length || 0,
+        }
+
+        return response;
     }
 }
