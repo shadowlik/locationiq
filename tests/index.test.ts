@@ -20,12 +20,12 @@ describe('search', function() {
         key: '2626c366a08184',
     });
 
-    it('Search by query', async() => {
+    it('Search by query return success', async() => {
         const response = await locationiq.search('Av Aristoteles de Menezes, 33');
         expect(response.status).equal(200);
     });
 
-    it('Search by structured data', async() => {
+    it('Search by structured data return sucess', async() => {
         const response = await locationiq.search({
             postalCode: '05415-001',
             street: 'Joaquim Antunes, 796',
@@ -49,7 +49,7 @@ describe('search', function() {
         expect(response.status).equal(400);
     });
 
-    it('Search by empty query', async() => {
+    it('Search by empty query error', async() => {
         const response = await locationiq.search('');
         expect(response.status).equal(400);
     });
