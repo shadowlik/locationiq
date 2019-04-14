@@ -113,7 +113,7 @@ export class LocationIq {
                 // Postalcode with Country Codes search
                 if (postalCode && countrycodes) {
                     if (typeof countrycodes !== 'string' || countrycodes.length  !== 2) {
-                        throw Error('Invalid country code');
+                        throw new Error('Invalid country code');
                     };
 
                     params.countrycodes = countrycodes;

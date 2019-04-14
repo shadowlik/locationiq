@@ -33,6 +33,22 @@ describe('search', function() {
         expect(response.status).equal(200);
     });
 
+    it('Search by postal code success', async() => {
+        const response = await locationiq.search({
+            postalCode: '99820',
+            countrycodes: 'US',
+        });
+        expect(response.status).equal(200);
+    });
+
+    it('Search by postal code error', async() => {
+        const response = await locationiq.search({
+            postalCode: '05415-001',
+            countrycodes: 'BRA',
+        });
+        expect(response.status).equal(400);
+    });
+
     it('Search by empty query', async() => {
         const response = await locationiq.search('');
         expect(response.status).equal(400);
