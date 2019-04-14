@@ -6,7 +6,9 @@
 
 ## Usage
 
-> npm i -S locationiq
+```bash
+$ npm i -S locationiq
+```
 
 ```javascript
 // Javascript
