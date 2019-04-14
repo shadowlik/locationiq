@@ -146,7 +146,7 @@ export class LocationIq {
             } else {
                 // Query string only
                 if (typeof searchParams !== 'string' || searchParams.length === 0) {
-                    throw Error('Please provide a valid search string');
+                    throw new Error('Please provide a valid search string');
                 }
 
                 params.q = searchParams;
@@ -169,7 +169,7 @@ export class LocationIq {
         } catch (error) {
             // Build the error search response
             const response: LocationIqSearchResponse = {
-                status: error.status as number || 500,
+                status: error.status as number || 400,
                 error: error.message || error,
             }
             return response;
