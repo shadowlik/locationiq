@@ -2,11 +2,19 @@
 
 > npm package for https://locationiq.com
 
-Based on [LocationIQ documentation](https://locationiq.com/docs).
+- [LocationIQ API documentation](https://locationiq.com/docs).
 
 ## Usage
 
 > npm i -S locationiq
+
+```javascript
+// Javascript
+const { LocatioIq } = require('locationiq');
+
+// Typescript / ES6 Module
+import { LocationIq } from 'locationiq';
+```
 
 ## TL;DR;
 
