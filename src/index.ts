@@ -58,7 +58,6 @@ export class LocationIq {
             throw new Error('API Token is required');
         }
 
-
         // Creates a custom instance of axios
         this.request = Axios.create({
             timeout: this.timeout,
@@ -242,7 +241,6 @@ export class LocationIq {
             return response;
 
         } catch (error) {
-            console.log(error);
             // Build the error search response
             const response: LocationIqReverseResponse = {
                 status: error.status as number || 400,
