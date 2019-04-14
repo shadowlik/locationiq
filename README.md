@@ -1,5 +1,7 @@
 # LocationIQ
 
+[![CircleCI](https://circleci.com/gh/shadowlik/locationiq/tree/master.svg?style=svg)](https://circleci.com/gh/shadowlik/locationiq/tree/master)
+
 > npm package for https://locationiq.com
 
 - [LocationIQ API documentation](https://locationiq.com/docs).
