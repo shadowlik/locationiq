@@ -5,13 +5,13 @@ import { LocationIq } from '../src/';
 
 describe('locationiq', () => {
     it('New instance without token', function() {
-        expect(() => new LocationIq({ token: '' })).to.throw();
+        expect(() => new LocationIq({ key: '' })).to.throw();
     });
 });
 
 describe('search', function() {
     const locationiq = new LocationIq({
-        token: '2626c366a08184',
+        key: '2626c366a08184',
     });
 
     it('Search by query', async() => {
@@ -21,7 +21,7 @@ describe('search', function() {
 
     it('Search by structured data', async() => {
         const response = await locationiq.search({
-            postalcode: '05415-001',
+            postalCode: '05415-001',
             street: 'Joaquim Antunes, 796',
         });
         expect(response.status).equal(200);

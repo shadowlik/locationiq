@@ -1,15 +1,12 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
-
-enum Bool {
-    true = 1,
-    false = 2
-}
+import { LocationIqSearchRequest, LocationIqSearchResponse } from './search';
+import { LocationIqReverseRequest } from './reverse';
 
 export interface LocationIqOptions {
     /**
      * API Token
      */
-    token: string;
+    key: string;
 
     /**
      * Region (us1 or eu1)
@@ -30,37 +27,8 @@ export interface LocationIqOptions {
     format?: string;
 }
 
-export interface LocationIqSearch {
-    street?: string;
-    city?: string;
-    county?: string;
-    state?: string;
-    country?: string;
-    postalcode?: string;
-    viewbox?: string;
-    bounded?: string;
-    addressdetails?: Bool;
-    limit?: string;
-    acceptLanguage?: string;
-    countrycodes?: string;
-    namedetails?: string;
-    dedupe?: string;
-    polygonGeojson?: string;
-    polygonKml?: string;
-    polygonSvg?: string;
-    polygonText?: string;
-    extratags?: string;
-    excludePlaceIds?: string;
-    normalizecity?: string;
-}
-
-export interface LocationIqReverse {
-    lat: number;
-    lng: number;
-}
-
 export class LocationIq {
-    private token: string;
+    private key: string;
     region: string = 'us1';
     basePath: string;
     timeout: number = 3000;
@@ -76,17 +44,17 @@ export class LocationIq {
     constructor(options: LocationIqOptions) {
         const {
             region,
-            token,
+            key,
         } = options;
 
-        this.token = token;
+        this.key = key;
 
         // Check if
         if (region === 'eu1') this.region = region;
 
         this.basePath = `https://${this.region}.locationiq.com/v1/`;
 
-        if (!token && token.length === 0) {
+        if (!key && key.length === 0) {
             throw new Error('API Token is required');
         }
 
@@ -100,37 +68,9 @@ export class LocationIq {
         // Set the default parameters
         this.request.defaults.params = {
             format: this.format,
-            key: this.token,
+            key: this.key,
         }
     }
-
-    /**
-     * Success handler
-     *
-     * @private
-     * @param {AxiosResponse} response
-     * @returns {*}
-     * @memberof LocationIq
-     */
-    private success(response: AxiosResponse): any {
-        return {
-            status: 200,
-            results: response.data,
-            total: response.data.length,
-        };
-    };
-
-    /**
-     * Error handler
-     *
-     * @private
-     * @param {Error} error
-     * @returns {Error}
-     * @memberof LocationIq
-     */
-    private error(error: Error): Error {
-        return error;
-    };
 
     /**
      * Search / Forward Geocoding
@@ -141,18 +81,18 @@ export class LocationIq {
      * @param {LocationIqSearch} options
      * @memberof LocationIq
      */
-    async search(searchParams: LocationIqSearch | string ): Promise<any> {
+    async search(searchParams: LocationIqSearchRequest | string ): Promise<LocationIqSearchResponse> {
         try {
             let params: { [x: string]: any } = {};
 
-            if (typeof searchParams !== 'string') {
+            if (typeof searchParams === 'object' && !Array.isArray(searchParams)) {
                 const {
                     street,
                     city,
                     county,
                     state,
                     country,
-                    postalcode,
+                    postalCode,
                     viewbox,
                     bounded,
                     addressdetails,
@@ -168,47 +108,71 @@ export class LocationIq {
                     extratags,
                     excludePlaceIds,
                     normalizecity,
-                } = searchParams as LocationIqSearch;
+                } = searchParams as LocationIqSearchRequest;
 
-                if (street) params.street = street;
-                if (city) params.city = city;
-                if (county) params.county = county;
-                if (state) params.state = state;
-                if (country) params.country = country;
-                if (postalcode) params.postalcode = postalcode;
-                if (viewbox) params.viewbox = viewbox;
-                if (bounded) params.bounded = bounded;
-                if (addressdetails) params.addressdetails = addressdetails;
-                if (limit) params.limit = limit;
-                if (acceptLanguage) params.acceptLanguage = acceptLanguage;
-                if (countrycodes) params.countrycodes = countrycodes;
-                if (namedetails) params.namedetails = namedetails;
-                if (dedupe) params.dedupe = dedupe;
-                if (polygonGeojson) params.polygonGeojson = polygonGeojson;
-                if (polygonKml) params.polygonKml = polygonKml;
-                if (polygonSvg) params.polygonSvg = polygonSvg;
-                if (polygonText) params.polygonText = polygonText;
-                if (extratags) params.extratags = extratags;
-                if (excludePlaceIds) params.excludePlaceIds = excludePlaceIds;
-                if (normalizecity) params.normalizecity = normalizecity;
+                // Postalcode with Country Codes search
+                if (postalCode && countrycodes) {
+                    if (typeof countrycodes !== 'string' || countrycodes.length  !== 2) {
+                        throw Error('Invalid country code');
+                    };
+
+                    params.countrycodes = countrycodes;
+                    params.postalcode = postalCode;
+
+                // Structure query
+                } else {
+                    if (street) params.street = street;
+                    if (city) params.city = city;
+                    if (county) params.county = county;
+                    if (state) params.state = state;
+                    if (country) params.country = country;
+                    if (postalCode) params.postalcode = postalCode;
+                    if (viewbox) params.viewbox = viewbox;
+                    if (bounded) params.bounded = bounded;
+                    if (addressdetails) params.addressdetails = addressdetails;
+                    if (limit) params.limit = limit;
+                    if (acceptLanguage) params.acceptLanguage = acceptLanguage;
+                    if (namedetails) params.namedetails = namedetails;
+                    if (dedupe) params.dedupe = dedupe;
+                    if (polygonGeojson) params.polygonGeojson = polygonGeojson;
+                    if (polygonKml) params.polygonKml = polygonKml;
+                    if (polygonSvg) params.polygonSvg = polygonSvg;
+                    if (polygonText) params.polygonText = polygonText;
+                    if (extratags) params.extratags = extratags;
+                    if (excludePlaceIds) params.excludePlaceIds = excludePlaceIds;
+                    if (normalizecity) params.normalizecity = normalizecity;
+                }
 
             } else {
                 // Query string only
-                if (searchParams.length === 0 || Array.isArray(searchParams)) {
+                if (typeof searchParams !== 'string' || searchParams.length === 0) {
                     throw Error('Please provide a valid search string');
                 }
 
                 params.q = searchParams;
             };
 
-            const response = await this.request.get('search.php', {
+            // Make the query
+            const queryResponse: AxiosResponse = await this.request.get('search.php', {
                 params,
             });
 
-            return this.success(response);
+            // Build the success search response
+            const response: LocationIqSearchResponse = {
+                status: 200,
+                results: queryResponse.data || [],
+                total: queryResponse.data.length || 0,
+            };
+
+            return response;
 
         } catch (error) {
-            return this.error(error as Error);
+            // Build the error search response
+            const response: LocationIqSearchResponse = {
+                status: error.status as number || 500,
+                error: error.message || error,
+            }
+            return response;
         }
     }
 
@@ -221,7 +185,7 @@ export class LocationIq {
      * @param {LocationIqReverse} options
      * @memberof LocationIq
      */
-    reverse(options: LocationIqReverse): void {
+    reverse(options: LocationIqReverseRequest): void {
         this.request.get('reverse.php');
     }
 }
