@@ -101,10 +101,10 @@ export class LocationIq {
                     countrycodes,
                     namedetails,
                     dedupe,
-                    polygonGeojson,
-                    polygonKml,
-                    polygonSvg,
-                    polygonText,
+                    polygon_geojson,
+                    polygon_kml,
+                    polygon_svg,
+                    polygon_text,
                     extratags,
                     excludePlaceIds,
                     normalizecity,
@@ -134,10 +134,10 @@ export class LocationIq {
                     if (acceptLanguage) params.acceptLanguage = acceptLanguage;
                     if (namedetails) params.namedetails = namedetails;
                     if (dedupe) params.dedupe = dedupe;
-                    if (polygonGeojson) params.polygonGeojson = polygonGeojson;
-                    if (polygonKml) params.polygonKml = polygonKml;
-                    if (polygonSvg) params.polygonSvg = polygonSvg;
-                    if (polygonText) params.polygonText = polygonText;
+                    if (polygon_geojson) params.polygon_geojson = polygon_geojson;
+                    if (polygon_kml) params.polygon_kml = polygon_kml;
+                    if (polygon_svg) params.polygon_svg = polygon_svg;
+                    if (polygon_text) params.polygon_text = polygon_text;
                     if (extratags) params.extratags = extratags;
                     if (excludePlaceIds) params.excludePlaceIds = excludePlaceIds;
                     if (normalizecity) params.normalizecity = normalizecity;
@@ -186,58 +186,70 @@ export class LocationIq {
      * @memberof LocationIq
      */
     async reverse(options: LocationIqReverseRequest): Promise<LocationIqReverseResponse> {
-        const {
-            lat,
-            lon,
-            zoom,
-            addressdetails,
-            namedetails,
-            acceptLanguage,
-            osm_type,
-            osm_id,
-            countrycodes,
-            polygonGeojson,
-            polygonKml,
-            polygonSvg,
-            polygonText,
-            extratags,
-            normalizecity,
-            statecode,
-        } = options;
+        try {
+            const {
+                lat,
+                lon,
+                zoom,
+                addressdetails,
+                namedetails,
+                acceptLanguage,
+                osm_type,
+                osm_id,
+                countrycodes,
+                polygon_geojson,
+                polygon_kml,
+                polygon_svg,
+                polygon_text,
+                extratags,
+                normalizecity,
+                statecode,
+            } = options;
 
-        if (!lat) throw new Error('lat parameter is requried')
-        if (!lon) throw new Error('lat parameter is requried');
+            if (!lat) throw new Error('lat parameter is requried')
+            if (!lon) throw new Error('lat parameter is requried');
 
-        const params: LocationIqReverseRequest = {
-            lat,
-            lon,
-        };
+            const params: LocationIqReverseRequest = {
+                lat,
+                lon,
+            };
 
-        if(zoom) params.zoom = zoom;
-        if(addressdetails) params.addressdetails = addressdetails;
-        if(namedetails) params.namedetails = namedetails;
-        if(acceptLanguage) params.acceptLanguage = acceptLanguage;
-        if(osm_type) params.osm_type = osm_type;
-        if(osm_id) params.osm_id = osm_id;
-        if(countrycodes) params.countrycodes = countrycodes;
-        if(polygonGeojson) params.polygonGeojson = polygonGeojson;
-        if(polygonKml) params.polygonKml = polygonKml;
-        if(polygonSvg) params.polygonSvg = polygonSvg;
-        if(polygonText) params.polygonText = polygonText;
-        if(extratags) params.extratags = extratags;
-        if(normalizecity) params.normalizecity = normalizecity;
-        if(statecode) params.statecode = statecode;
+            if(zoom) params.zoom = zoom;
+            if(addressdetails) params.addressdetails = addressdetails;
+            if(namedetails) params.namedetails = namedetails;
+            if(acceptLanguage) params.acceptLanguage = acceptLanguage;
+            if(osm_type) params.osm_type = osm_type;
+            if(osm_id) params.osm_id = osm_id;
+            if(countrycodes) params.countrycodes = countrycodes;
+            if(polygon_geojson) params.polygon_geojson = polygon_geojson;
+            if(polygon_kml) params.polygon_kml = polygon_kml;
+            if(polygon_svg) params.polygon_svg = polygon_svg;
+            if(polygon_text) params.polygon_text = polygon_text;
+            if(extratags) params.extratags = extratags;
+            if(normalizecity) params.normalizecity = normalizecity;
+            if(statecode) params.statecode = statecode;
 
-        const queryResponse: AxiosResponse = await this.request.get('reverse.php', {
-            params,
-        });
+            const queryResponse: AxiosResponse = await this.request.get('reverse.php', {
+                params,
+            });
 
-        const response: LocationIqReverseResponse = {
-            status: 200,
-            results: queryResponse.data,
-            total: queryResponse.data.length || 0,
+            const response: LocationIqReverseResponse = {
+                status: 200,
+                results: queryResponse.data,
+                total: queryResponse.data.length || 0,
+            }
+
+            return response;
+
+        } catch (error) {
+            console.log(error);
+            // Build the error search response
+            const response: LocationIqReverseResponse = {
+                status: error.status as number || 400,
+                error: error.message || error,
+            }
+
+            return response;
         }
-
-        return response;
     }
 }

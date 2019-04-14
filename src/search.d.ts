@@ -20,10 +20,10 @@ export interface LocationIqSearchRequest {
     countrycodes?: string;
     namedetails?: string;
     dedupe?: string;
-    polygonGeojson?: string;
-    polygonKml?: string;
-    polygonSvg?: string;
-    polygonText?: string;
+    polygon_geojson?: string;
+    polygon_kml?: string;
+    polygon_svg?: string;
+    polygon_text?: string;
     extratags?: string;
     excludePlaceIds?: string;
     normalizecity?: string;

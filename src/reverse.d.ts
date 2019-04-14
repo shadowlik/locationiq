@@ -8,10 +8,10 @@ export interface LocationIqReverseRequest {
     osm_type?: string;
     osm_id?: string;
     countrycodes?: string;
-    polygonGeojson?: string;
-    polygonKml?: string;
-    polygonSvg?: string;
-    polygonText?: string;
+    polygon_geojson?: string;
+    polygon_kml?: string;
+    polygon_svg?: string;
+    polygon_text?: string;
     extratags?: string;
     normalizecity?: boolean;
     statecode?: string;
