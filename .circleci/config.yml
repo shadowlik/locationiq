@@ -32,9 +32,6 @@ jobs:
           root: .
           paths: .
   publish:
-    filters:
-      tags:
-        only: /^v.*/
     docker:
         - image: circleci/node:8
     steps:
@@ -46,3 +43,19 @@ jobs:
         - run:
             name: Publish package
             command: npm publish
+  workflows:
+    version: 2
+    test-deploy:
+        jobs:
+        - build:
+            filters:
+                tags:
+                only: /^v.*/
+        - deploy:
+            requires:
+                - test
+            filters:
+                tags:
+                only: /^v.*/
+                branches:
+                ignore: /.*/
