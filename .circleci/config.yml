@@ -1,61 +1,60 @@
 version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:8.9.1
+
 jobs:
-  build:
-    docker:
-      - image: circleci/node:8
+  test:
+    <<: *defaults
     steps:
       - checkout
+
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+	  # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: npm install
       - run:
-          name: install-deps
-          command: npm install
+          name: Run tests
+          command: npm testWithCoverage
+
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ./node_modules
-      - run:
-          name: test
-          command: npm test
-      - run:
-          name: code-coverage
-          command: 'npm run testWithCoverage'
-      - store_artifacts:
-          path: test-results.xml
-          prefix: tests
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
-      - store_test_results:
-          path: test-results.xml
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
       - persist_to_workspace:
-          root: .
+          root: ~/repo
           paths: .
-  publish:
-    docker:
-        - image: circleci/node:8
+  deploy:
+    <<: *defaults
     steps:
-        - attach_workspace:
-            at: .
-        - run:
-            name: Authenticate with registry
-            command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
-        - run:
-            name: Publish package
-            command: npm publish
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
 workflows:
-    version: 2
-    test-deploy:
-        jobs:
-        - build:
-            filters:
-                tags:
-                only: /^v.*/
-        - publish:
-            requires:
-                - build
-            filters:
-                tags:
-                only: /^v.*/
-                branches:
-                ignore: /.*/
+  version: 2
+  test-deploy:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /^v.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
