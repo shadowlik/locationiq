@@ -28,3 +28,21 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: test-results.xml
+      - persist_to_workspace:
+          root: .
+          paths: .
+    publish:
+        filters:
+            tags:
+              only: /^v.*/
+        docker:
+            - image: circleci/node:8
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Authenticate with registry
+                command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+            - run:
+                name: Publish package
+                command: npm publish
