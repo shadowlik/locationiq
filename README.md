@@ -1,6 +1,6 @@
 # LocationIQ
 
-[![CircleCI](https://circleci.com/gh/shadowlik/locationiq/tree/master.svg?style=svg)](https://circleci.com/gh/shadowlik/locationiq/tree/master) [![Coverage Status](https://coveralls.io/repos/github/shadowlik/locationiq/badge.svg?branch=master)](https://coveralls.io/github/shadowlik/locationiq?branch=master)
+[![npm version](https://badge.fury.io/js/locationiq.svg)](https://badge.fury.io/js/locationiq) [![CircleCI](https://circleci.com/gh/shadowlik/locationiq/tree/master.svg?style=shield)](https://circleci.com/gh/shadowlik/locationiq/tree/master) [![Coverage Status](https://coveralls.io/repos/github/shadowlik/locationiq/badge.svg?branch=master)](https://coveralls.io/github/shadowlik/locationiq?branch=master)
 
 > npm package for https://locationiq.com
 
