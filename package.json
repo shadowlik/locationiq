@@ -22,7 +22,7 @@
   "author": "Henrique Marques Fernandes <henrique@marquesfernandes.com>",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.21.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
